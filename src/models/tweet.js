@@ -15,8 +15,6 @@ const tweetSchema = new mongoose.Schema({
 
 
 
-
-
 }, {timestamps: true});
 
 
