@@ -8,12 +8,20 @@ app.use(bodyParser.urlencoded({extended: true}))
 
 app.use('/api', apiRoutes)
 
-import Service from "./services/tweet-service.js"
+import {UserRepository, TweetRepository} from "./repository/index.js";
+import LikeService from "./services/like-service.js"
 
 app.listen(3000, async () => {
     console.log('server started');
     await connect();
     console.log('Mongo db connected');
+    const tweetRepo = new TweetRepository()
+    const userRepo = new UserRepository()
+    const tweets = await tweetRepo.getAll(0,10)
+    const users = await userRepo.getAll()  
+    
+    const likeService = new LikeService()
+    await likeService.toggleLike(tweets[0].id, 'Tweet', users[0].id)
 
 });
 
