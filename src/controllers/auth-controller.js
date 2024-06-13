@@ -26,3 +26,42 @@ export const signup = async (req,res) => {
         
     }
 }
+
+export const login = async(req, res) => {
+    try {
+        const user  = await userService.getUserByEmail(req.body.email)
+
+        
+        if(!user){
+            return res.status(401).json({
+                message: "No user found",
+                success: false,
+                
+            })
+        }
+        if(!user.comparePassword(req.body.password)){
+            console.log("here")
+            return res.status(401).json({
+                message: "Incorrect Password",
+                success: false,
+                
+            })
+        }
+        const token = user.genJWT()
+        return res.status(200).json({
+            success: true,
+            message: 'succesfully logged in',
+            data: token,
+            err: {}
+        })
+        
+    } catch (error) {
+
+        return res.status(500).json({
+            message: "Something went wrong",
+            success: false,
+            data: {},
+            error: error
+        })
+    }
+}
